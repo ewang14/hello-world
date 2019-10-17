@@ -1,0 +1,110 @@
+function setup() {
+  createCanvas(400, 400);
+  background(0);
+  noStroke();
+  fill(0, 255, 0);  
+}
+var ballX = 100;
+var ballY = 100;
+var ballSpeedX = -4;
+var ballSpeedY = 1;
+var playerX = 10;
+var playerY = 10;
+var oppX = 370; 
+var oppY = 250;
+var playerScore = 0;
+var oppScore = 0; 
+function draw() {
+  rect(300,30,50,50);
+  background(0);  
+  setText();
+  setShapes();    
+  bounceCheck();
+  increment();
+  scoreCheck();  
+  moveOpp();
+}
+function increment() {  
+  ballX += ballSpeedX;  
+  ballY += ballSpeedY;
+  
+  if(millis() % 1000 == 0) {
+    ballSpeedX = ballSpeedY * 2;
+  }
+}
+function mouseMoved() {
+  playerY = mouseY;
+}
+function ball(x, y) {
+  ellipse(x - 2, y, 30, 30);
+  ellipse(x, y, 15, 15);
+}
+function setShapes() {
+  fill(200, 235, 0);
+  rect(playerX, playerY, 20, 75);
+  rect(oppX, oppY, 20, 75); 
+  ball(ballX, ballY);
+}
+function playerSliderBounce() {
+  if(playerY < ballY && playerY + 100 > ballY) {
+    ballSpeedX = ballSpeedX * -1;
+    playerScore += 1;
+  }
+}
+function oppSliderBounce() {
+  if(oppY < ballY && oppY + 100 > ballY) {
+    ballSpeedX = ballSpeedX * -1;
+    oppScore += 1;
+  }
+}
+function bounceCheck() {
+  if(ballY < 0 || ballY > 200) {
+    ballSpeedY = ballSpeedY * -1;
+  }
+  
+ if(ballX < 40 && ballSpeedX < 0) {
+   playerSliderBounce();
+ }
+if(ballX > 360 && ballSpeedX > 0) {
+   oppSliderBounce();
+ }
+  
+  if(ballX < 0) {
+    ballX = 200;
+    oppScore += 1;
+  }
+  
+  if(ballX > 400) {
+    ballX = 200; 
+    playerScore += 1; 
+  }
+}
+//trying to move opponent
+function moveOpp() { 
+  var middle = oppY + 100/2;
+  if (middle < ballY + 25){
+    oppY += 3;
+  }
+  if (middle > ballY + 25){
+    oppY -= 3;
+  }
+  
+}
+function scoreCheck() {
+  if(oppScore == 10) {
+    noLoop();
+    playerScore = "PLAYER 1, YOU LOSE";
+  }
+  
+  if(playerScore == 10) {
+    noLoop();
+    oppScore = "YOU WIN";
+  }
+}
+function setText() {
+  textAlign(CENTER);
+  textSize(22);
+  fill(255);
+  text(playerScore, 10, 20);
+  text(oppScore, 380, 20); 
+}
